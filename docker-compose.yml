@@ -1,22 +1,25 @@
-version: "3"
-
 services:
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
-
-    container_name: sql_server_container
+    container_name: db
 
     environment:
-      SA_PASSWORD: "YourPassword123"
+      SA_PASSWORD: "yourPassword123"
       ACCEPT_EULA: "Y"
 
     ports:
       - "1433:1433"
 
-    volumes:
-      - sql_data:/var/opt/mssql
+  backend:
+    build: .
+    container_name: backend
 
-volumes:
-  sql_data:
-  
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - db
+
+    env_file:
+      - ./.env
